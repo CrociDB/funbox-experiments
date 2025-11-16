@@ -1,5 +1,7 @@
 # FunBox Experiments
 
+![My FunBox build](img/funbox-build.jpg)
+
 Those are some experiments I'm doing with my custom build of [FunBox](https://github.com/GuitarML/FunBox) guitar pedal. The manuals for building and flashing are for Linux. Building it on a mac should be exactly the same, but flashing probably not. No idea how to do that on Windows, but on WSL should be exactly the same steps.
 
 ## Building
