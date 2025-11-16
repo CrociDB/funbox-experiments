@@ -1,0 +1,130 @@
+diff --git a/src/daisy_petal.cpp b/src/daisy_petal.cpp
+index 55af0ef8..a414256e 100644
+--- a/src/daisy_petal.cpp
++++ b/src/daisy_petal.cpp
+@@ -9,18 +9,25 @@ using namespace daisy;
+ 
+ // Hardware related defines.
+ // Switches
+-constexpr Pin SW_1_PIN = seed::D8;
+-constexpr Pin SW_2_PIN = seed::D9;
+-constexpr Pin SW_3_PIN = seed::D10;
+-constexpr Pin SW_4_PIN = seed::D13;
+-constexpr Pin SW_5_PIN = seed::D25;
+-constexpr Pin SW_6_PIN = seed::D26;
+-constexpr Pin SW_7_PIN = seed::D7;
++constexpr Pin SW_1_PIN = seed::D25; // Footswitch 1
++constexpr Pin SW_2_PIN = seed::D26; // Footswitch 2
++constexpr Pin SW_3_PIN = seed::D14;  // Switch 1  left
++constexpr Pin SW_4_PIN = seed::D13;  // Switch 1  right
++constexpr Pin SW_5_PIN = seed::D7;  // Switch 2  left
++constexpr Pin SW_6_PIN = seed::D10;  // Switch 2  right
++constexpr Pin SW_7_PIN = seed::D2;  // Switch 3  left
++constexpr Pin SW_8_PIN = seed::D4;  // Switch 3  right
++constexpr Pin SW_9_PIN = seed::D1;  // Dip Switch 1
++constexpr Pin SW_10_PIN = seed::D3;  // Dip Switch 2
++constexpr Pin SW_11_PIN = seed::D5;  // Dip Switch 3 (Funbox v2/v3, not available on v1 board)
++constexpr Pin SW_12_PIN = seed::D6;  // Dip Switch 4 (Funbox v2/v3, not available on v1 board)
++
++
+ 
+ // Encoder
+ constexpr Pin ENC_A_PIN     = seed::D28;
+ constexpr Pin ENC_B_PIN     = seed::D27;
+-constexpr Pin ENC_CLICK_PIN = seed::D14;
++constexpr Pin ENC_CLICK_PIN = seed::D24;
+ 
+ // Knobs
+ constexpr Pin PIN_EXPRESSION = seed::D15;
+@@ -84,11 +91,12 @@ void DaisyPetal::Init(bool boost)
+     seed.Configure();
+     seed.Init(boost);
+     InitSwitches();
+-    InitEncoder();
++    //InitEncoder();  // Comment out this since not used on Funbox? 
+     InitLeds();
+     InitAnalogControls();
+     SetAudioBlockSize(48);
+     //seed.usb_handle.Init(UsbHandle::FS_INTERNAL);
++    //InitMidi(); // Could initialize midi here, but for now leaving it up to the individual effect whether midi is used or not
+ }
+ 
+ void DaisyPetal::DelayMs(size_t del)
+@@ -203,6 +211,14 @@ void DaisyPetal::ProcessDigitalControls()
+     }
+ }
+ 
++void DaisyPetal::InitMidi()
++{   
++    MidiUartHandler::Config midi_config;
++    midi_config.transport_config.rx = seed::D30; // On Funbox v2 and v3 hardware
++    midi_config.transport_config.tx = seed::D29; // On Funbox v2 hardware only
++    midi.Init(midi_config);
++}
++
+ 
+ void DaisyPetal::ClearLeds()
+ {
+@@ -284,6 +300,11 @@ void DaisyPetal::InitSwitches()
+         SW_5_PIN,
+         SW_6_PIN,
+         SW_7_PIN,
++        SW_8_PIN,
++        SW_9_PIN,
++        SW_10_PIN,
++        SW_11_PIN,
++        SW_12_PIN,
+     };
+ 
+     for(size_t i = 0; i < SW_LAST; i++)
+diff --git a/src/daisy_petal.h b/src/daisy_petal.h
+index 4f667eda..e6d15418 100644
+--- a/src/daisy_petal.h
++++ b/src/daisy_petal.h
+@@ -16,14 +16,19 @@ class DaisyPetal
+     /** Switches */
+     enum Sw
+     {
+-        SW_1,    /**< Footswitch */
+-        SW_2,    /**< Footswitch */
+-        SW_3,    /**< Footswitch */
+-        SW_4,    /**< Footswitch */
+-        SW_5,    /**< Toggle */
+-        SW_6,    /**< Toggle */
+-        SW_7,    /**< Toggle */
+-        SW_LAST, /**< Last enum item */
++        SW_1,    // Footswitch 1
++        SW_2,    // Footswitch 2
++        SW_3,    // Switch 1  up
++        SW_4,    // Switch 1  down
++        SW_5,    // Switch 2  left
++        SW_6,    // Switch 2  right
++        SW_7,    // Switch 3  right
++        SW_8,    // Switch 3  right
++        SW_9,    // Dip Switch 1
++        SW_10,   // Dip Switch 2
++        SW_11,   // Dip Switch 3 (Only on v2/v3 boards, not v1)
++        SW_12,   // Dip Switch 4 (Only on v2/v3 boards, not v1)
++        SW_LAST, // last pos
+     };
+ 
+     /** Knobs */
+@@ -151,6 +156,9 @@ class DaisyPetal
+     /** Process digital controls */
+     void ProcessDigitalControls();
+ 
++    /** Initialize MIDI (Funbox addition) */  
++    void InitMidi();
++
+     /** Turn all leds off */
+     void ClearLeds();
+ 
+@@ -183,6 +191,8 @@ class DaisyPetal
+     RgbLed ring_led[8];       /**< & */
+     Led    footswitch_led[4]; /**< & */
+ 
++    MidiUartHandler midi;
++
+   private:
+     void SetHidUpdateRates();
+     void InitSwitches();
