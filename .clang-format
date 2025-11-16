@@ -1,5 +1,6 @@
 BasedOnStyle: LLVM
 IndentWidth: 2
+ColumnLimit: 120
 
 # Make braces go on new lines for all common block types
 BreakBeforeBraces: Allman
