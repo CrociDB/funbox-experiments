@@ -1,0 +1,20 @@
+BasedOnStyle: LLVM
+IndentWidth: 2
+
+# Make braces go on new lines for all common block types
+BreakBeforeBraces: Allman
+
+BraceWrapping:
+  AfterClass:      true
+  AfterControlStatement: true
+  AfterEnum:       true
+  AfterFunction:   true
+  AfterNamespace:  true
+  AfterStruct:     true
+  AfterUnion:      true
+  BeforeCatch:     true
+  BeforeElse:      true
+  SplitEmptyFunction: true
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: true
+  IndentBraces:    false

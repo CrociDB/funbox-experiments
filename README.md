@@ -12,6 +12,10 @@ nix-shell --run "make"
 
 This will build all the experiments.
 
+## Developing
+
+Once in the `nix-shell`, it will build the project and generate `compile-commands.json` to use with `clangd` LSP. Unfortunately I wasn't able to remove all the errors it's reporting, I guess it's something related to the fact that we're not actually building this project with clang. But all in all, it's really useful.
+
 ## Flashing Daisy Seed
 
 This is a bit more tricky. There's a way to flash it from the shell straight with `make program-dfu` in each experiment. However, it's necessary to have the correct `udev` rules on the host system. I couldn't get it working from within the `nix-shell`, without having `dfu-util` also installed on my host system.
