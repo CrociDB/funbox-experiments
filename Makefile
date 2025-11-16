@@ -1,6 +1,6 @@
-.PHONY: all libs template clean
+.PHONY: all libs basesynth template clean
 
-all: libs template
+all: basesynth template
 
 libs:
 	git submodule init
@@ -9,10 +9,14 @@ libs:
 	make -C libDaisy
 	make -C DaisySP
 
-template:
+basesynth: libs
+	make -C basesynth
+
+template: libs
 	make -C template
 
 clean:
 	rm -fr libDaisy/build
 	rm -fr DaisySP/build
+	rm -fr basesynth/build
 	rm -fr template/build
