@@ -228,6 +228,10 @@ int main(void)
 
   program.init();
 
+  hw.Init();
+
+  hw.seed.StartLog();
+
   switch1[0] = Funbox::SWITCH_1_LEFT;
   switch1[1] = Funbox::SWITCH_1_RIGHT;
   switch2[0] = Funbox::SWITCH_2_LEFT;
