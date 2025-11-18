@@ -1,3 +1,7 @@
+#pragma once
+
+#include "synth.h"
+
 #define TAP_TEMPO_SAMPLES 5
 #define TAP_TEMPO_THRESHOLD 2000
 #define TAP_TEMPO_DEFAULT 800
@@ -15,7 +19,7 @@ private:
   uint64_t _last_tempo;
 
 public:
-  void init();
+  void init(float sample_rate);
   inline void update() { this->time++; }
 
   void tap_tempo();
@@ -24,4 +28,5 @@ public:
 
   uint64_t time;
   uint64_t tempo;
+  Synth synth;
 };

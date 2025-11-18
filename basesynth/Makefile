@@ -10,7 +10,7 @@ OPT = -O1
 #OPT=-Os
 
 # Sources
-CPP_SOURCES = main.cpp basesynth.cpp
+CPP_SOURCES = main.cpp basesynth.cpp synth.cpp
 
 # Library Locations
 LIBDAISY_DIR = ../libDaisy

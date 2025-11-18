@@ -175,6 +175,10 @@ static void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer
   float vparam5 = param5.Process();
   float vparam6 = param6.Process();
 
+  program.synth.set_ratio(vparam1);
+  program.synth.set_index(vparam2);
+  program.synth.set_freq(vparam3);
+
   // Handle Knob Changes Here
 
   for (size_t i = 0; i < size; i++)
@@ -199,12 +203,15 @@ static void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer
         // Mono
         // out[0][i] = (inL * dryMix + effectsL * wetMix) + (inL * dryMix +
         // effectsR * wetMix) * vLevel / 2.0; out[1][i] = out[0][i];
+        out[0][i] = program.synth.process();
       }
       else
       {
         // MISO
         // out[0][i] = (inL * dryMix + effectsL * wetMix) * vLevel;
         // out[1][i] = (inL * dryMix + effectsR * wetMix) * vLevel;
+        out[0][i] = program.synth.process();
+        out[1][i] = program.synth.process();
       }
     }
   }
@@ -226,7 +233,7 @@ int main(void)
 
   hw.SetAudioBlockSize(48);
 
-  program.init();
+  program.init(samplerate);
 
   hw.Init();
 

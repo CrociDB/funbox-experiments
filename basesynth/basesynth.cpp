@@ -1,6 +1,6 @@
 #include "basesynth.h"
 
-void BaseSynth::init()
+void BaseSynth::init(float sample_rate)
 {
   this->time = 0;
 
@@ -12,6 +12,8 @@ void BaseSynth::init()
   this->tap_tempo_index = 0;
   this->tempo = TAP_TEMPO_DEFAULT;
   this->_last_tempo = 0;
+
+  this->synth.init(sample_rate);
 }
 
 void BaseSynth::tap_tempo()
@@ -34,13 +36,8 @@ void BaseSynth::tap_tempo()
   this->tempo = this->calculate_tempo();
 }
 
-uint64_t BaseSynth::calculate_tempo()
-{
-  uint64_t total_diff = 0;
-  uint64_t total_samples = 0;
-
-  for (int i = 0; i < TAP_TEMPO_SAMPLES; i++)
-  {
+uint64_t BaseSynth::calculate_tempo() { uint64_t total_diff = 0; uint64_t total_samples = 0;
+  for (int i = 0; i < TAP_TEMPO_SAMPLES; i++) {
     uint64_t curr = this->tap_tempo_samples[i];
     uint64_t next = this->tap_tempo_samples[i == TAP_TEMPO_SAMPLES - 1 ? 0 : i + 1];
 
