@@ -1,25 +1,58 @@
 #pragma once
 
+#include "Control/adsr.h"
 #include "daisy_seed.h"
 #include "daisysp.h"
 
+#define MAX_VOICES 8
+
 using namespace daisysp;
+
+class Voice
+{
+public:
+  void init(float sample_rate);
+  float process();
+
+  void note_on(float freq);
+  void note_off();
+
+  inline void set_ratio(float v) { this->mod_ratio = 10.0f * v; };
+  inline void set_index(float v) { this->mod_index = v * 2000.0f; };
+
+  float freq;
+  bool active = false;
+
+private:
+  Oscillator carrier;
+  Oscillator modulator;
+  Adsr envelope;
+  float sample_rate;
+
+  float mod_ratio = 2.0f;
+  float mod_index = 100.0f;
+};
 
 class Synth
 {
 public:
   void init(float sample_rate);
   float process();
-  inline void set_ratio(float v) { this->mod_ratio = 10.0f * v; };
-  inline void set_index(float v) { this->mod_index = v * 2000.0f; };
-  inline void set_freq(float v) { this->carrier_freq = 440.0f * powf(2.0f, v); };
+  void note_on(float freq);
+  void note_off(float freq);
+
+  inline void set_ratio(float v)
+  {
+    for (auto &voice : voices)
+      voice.set_ratio(v);
+  }
+
+  inline void set_index(float v)
+  {
+    for (auto &voice : voices)
+      voice.set_index(v);
+  }
 
 private:
-  Oscillator carrier;
-  Oscillator modulator;
-  float sample_rate;
-
-  float carrier_freq = 440.0f; // Base frequency (A4)
-  float mod_ratio = 2.0f;      // Ratio of Modulator freq to Carrier freq
-  float mod_index = 100.0f;    // How strong the modulation is (FM depth)
+  Voice voices[MAX_VOICES];
 };

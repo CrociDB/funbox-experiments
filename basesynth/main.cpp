@@ -177,7 +177,6 @@ static void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer
 
   program.synth.set_ratio(vparam1);
   program.synth.set_index(vparam2);
-  program.synth.set_freq(vparam3);
 
   // Handle Knob Changes Here
 
@@ -234,6 +233,7 @@ int main(void)
   hw.SetAudioBlockSize(48);
 
   program.init(samplerate);
+  program.synth.note_on(440.0f);
 
   hw.Init();
 
